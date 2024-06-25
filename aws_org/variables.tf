@@ -1,5 +1,5 @@
 variable "organizational_units" {
-  description = "List of organizational units to create"
+  description = "A list of organizational units"
   type = list(object({
     unit_name = string
     parent_id = string
