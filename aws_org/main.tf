@@ -2,21 +2,24 @@ provider "aws" {
   region = var.aws_region
 }
 
-data "aws_organizations_organization" "awsou" {
+data "aws_organizations_organization" "org" {
   # This data source does not require any arguments
 }
 
-data "aws_organizations_organizational_units" "existing_ous" {
-  parent_id = data.aws_organizations_organization.awsou.roots[0].id
+# Create a map of parent OUs by their names
+locals {
+  root_id = data.aws_organizations_organization.org.roots[0].id
+}
+
+# Create a separate data source for each parent OU to get their IDs
+data "aws_organizations_organizational_unit" "parents" {
+  for_each = toset([for ou in var.organizational_units : ou.parent_name])
+  name     = each.value
+  parent_id = local.root_id
 }
 
 locals {
-  root_id = data.aws_organizations_organization.awsou.roots[0].id
-
-  parent_ids = {
-    for ou in data.aws_organizations_organizational_units.existing_ous.children :
-    ou.name => ou.id
-  }
+  parent_ids = { for name, parent in data.aws_organizations_organizational_unit.parents : name => parent.id }
 
   organizational_units = [
     for ou in var.organizational_units : {
