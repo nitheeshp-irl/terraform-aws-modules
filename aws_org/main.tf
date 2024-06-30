@@ -6,17 +6,19 @@ data "aws_organizations_organization" "awsou" {
   # This data source does not require any arguments
 }
 
-data "aws_organizations_organizational_units" "existing_ous" {
-  parent_id = data.aws_organizations_organization.awsou.roots[0].id
-}
-
+# Get root ID
 locals {
   root_id = data.aws_organizations_organization.awsou.roots[0].id
+}
 
-  parent_ids = {
-    for ou in data.aws_organizations_organizational_units.existing_ous.organizational_units :
-    ou.name => ou.id
-  }
+# Fetch all OUs in the root account
+data "aws_organizations_organizational_units" "existing_ous" {
+  parent_id = local.root_id
+}
+
+# Create a map of OU names to their IDs
+locals {
+  parent_ids = { for ou in data.aws_organizations_organizational_units.existing_ous.children : ou.name => ou.id }
 
   organizational_units = [
     for ou in var.organizational_units : {
