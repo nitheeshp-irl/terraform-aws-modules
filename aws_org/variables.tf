@@ -10,5 +10,4 @@ variable "organizational_units" {
     unit_name = string
     parent_id = string
   }))
-  default = []
 }
