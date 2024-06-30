@@ -1,5 +1,7 @@
-locals {
-  root_id = data.aws_organizations_organization.awsou.roots[0].id
+variable "aws_region" {
+  description = "The AWS region to create resources in"
+  type        = string
+  default     = "eu-west-1"
 }
 
 variable "organizational_units" {
@@ -8,15 +10,5 @@ variable "organizational_units" {
     unit_name = string
     parent_id = string
   }))
-  default = [
-    {
-      unit_name = "infra"
-      parent_id = local.root_id
-    },
-    {
-      unit_name = "apps"
-      parent_id = local.root_id
-    }
-  ]
+  default = []
 }
-
