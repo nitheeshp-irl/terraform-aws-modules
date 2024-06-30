@@ -6,7 +6,6 @@ data "aws_organizations_organization" "awsou" {
   # This data source does not require any arguments
 }
 
-# Get root ID
 locals {
   root_id = data.aws_organizations_organization.awsou.roots[0].id
 }
