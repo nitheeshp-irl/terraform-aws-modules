@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "The AWS region to create resources in"
   type        = string
-  default     = "eu-west-1"
+  default     = ""
 }
 
 variable "organizational_units" {
@@ -10,4 +10,5 @@ variable "organizational_units" {
     unit_name = string
     parent_id = string
   }))
+  default     = ""
 }
