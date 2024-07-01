@@ -6,9 +6,9 @@ variable "aws_region" {
 
 variable "organizational_units" {
   description = "List of organizational units"
+  default     = ""
   type = list(object({
     unit_name = string
     parent_id = string
-  }))
-  default     = ""
+  })) 
 }
